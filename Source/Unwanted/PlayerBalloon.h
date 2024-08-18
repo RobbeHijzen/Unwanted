@@ -63,14 +63,14 @@ protected:
 	float _InflationSpeed{ 200.f };
 
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Balloon Inflation")
 	float _CurrentRadius{50.f};
 	float _CurrentVerticalSpeed{};
 	float _CurrentHorizontalSpeed{};
 
 	// Delegates
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSizeChanged);
-	UPROPERTY(BlueprintAssignable, Category = "Balloon Radius")
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Balloon Radius")
 	FOnSizeChanged _OnSizeChanged{};
 
 private:	
