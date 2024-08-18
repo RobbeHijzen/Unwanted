@@ -32,7 +32,14 @@ void APlayerBalloon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AddActorWorldOffset(FVector{ 0.f, 0.f, 1.f } * _CurrentVerticalSpeed * DeltaTime, true);
+	if (!_HasPopped)
+	{
+		AddActorWorldOffset(FVector{ 0.f, 0.f, 1.f } *_CurrentVerticalSpeed * DeltaTime, true);
+	}
+	else
+	{
+		//AddActorWorldOffset(FVector{ 0.f, 0.f, -1.f } *_FallingSpeed * DeltaTime, true);
+	}
 }
 
 void APlayerBalloon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -47,14 +54,24 @@ void APlayerBalloon::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 }
 
+void APlayerBalloon::PopBalloon()
+{
+	_HasPopped = true;
+	_OnPopped.Broadcast();
+}
+
 void APlayerBalloon::Strafe(const FInputActionValue& value)
 {
+	if (_HasPopped) return;
+
 	float movementValue = value.Get<float>();
 	AddActorWorldOffset(FVector{ 1.f, 0.f, 0.f } * movementValue * _CurrentHorizontalSpeed * GetWorld()->GetDeltaSeconds(), true);
 }
 
 void APlayerBalloon::Inflate(const FInputActionValue& value)
 {
+	if (_HasPopped) return;
+
 	float inflationValue = value.Get<float>();
 
 	_CurrentRadius += GetWorld()->GetDeltaSeconds() * _InflationSpeed * inflationValue;

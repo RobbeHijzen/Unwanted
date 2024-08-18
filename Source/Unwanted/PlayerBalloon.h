@@ -23,6 +23,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	void PopBalloon();
+
 protected:
 
 	// Input
@@ -72,6 +75,18 @@ protected:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSizeChanged);
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Balloon Radius")
 	FOnSizeChanged _OnSizeChanged{};
+
+	// Delegates
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPopped);
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Death")
+	FOnSizeChanged _OnPopped{};
+
+	// Falling
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Death")
+	bool _HasPopped{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Death")
+	float _FallingSpeed{2000.f};
 
 private:	
 
