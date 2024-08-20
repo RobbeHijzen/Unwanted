@@ -51,11 +51,14 @@ void APlayerBalloon::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		// Bind movement actions
 		EnhancedInputComponent->BindAction(_StrafeAction, ETriggerEvent::Triggered, this, &APlayerBalloon::Strafe);
 		EnhancedInputComponent->BindAction(_InflateAction, ETriggerEvent::Triggered, this, &APlayerBalloon::Inflate);
+		
+		EnhancedInputComponent->BindAction(_StrafeAction, ETriggerEvent::Completed, this, &APlayerBalloon::StoppedMoving);
 	}
 }
 
 void APlayerBalloon::PopBalloon()
 {
+	if (_HasPopped) return;
 	_HasPopped = true;
 	_OnPopped.Broadcast();
 }
@@ -65,6 +68,10 @@ void APlayerBalloon::Strafe(const FInputActionValue& value)
 	if (_HasPopped) return;
 
 	float movementValue = value.Get<float>();
+
+	if (movementValue == -1) SetMovingToRight();
+	else if (movementValue == 1) SetMovingToLeft();
+
 	AddActorWorldOffset(FVector{ 1.f, 0.f, 0.f } * movementValue * _CurrentHorizontalSpeed * GetWorld()->GetDeltaSeconds(), true);
 }
 
@@ -103,5 +110,32 @@ void APlayerBalloon::AdjustCurrentSpeeds()
 void APlayerBalloon::AdjustCollisionRadius()
 {
 	_BalloonCollision->SetSphereRadius(_CurrentRadius);
+}
+
+void APlayerBalloon::StoppedMoving()
+{
+	_IsMovingToRight = false;
+	_IsMovingToLeft = false;
+	_OnStoppedMoving.Broadcast();
+}
+
+void APlayerBalloon::SetMovingToRight()
+{
+	if (_IsMovingToRight) return;
+
+	_IsMovingToRight = true;
+	_IsMovingToLeft = false;
+
+	_OnMovingToRight.Broadcast();
+}
+
+void APlayerBalloon::SetMovingToLeft()
+{
+	if (_IsMovingToLeft) return;
+
+	_IsMovingToLeft = true;
+	_IsMovingToRight = false;
+
+	_OnMovingToLeft.Broadcast();
 }
 

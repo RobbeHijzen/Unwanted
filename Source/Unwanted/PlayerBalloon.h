@@ -76,10 +76,25 @@ protected:
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Balloon Radius")
 	FOnSizeChanged _OnSizeChanged{};
 
-	// Delegates
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPopped);
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Death")
-	FOnSizeChanged _OnPopped{};
+	FOnPopped _OnPopped{};
+
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoppedMoving);
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Death")
+	FOnStoppedMoving _OnStoppedMoving{};
+
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovingToRight);
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Death")
+	FOnMovingToRight _OnMovingToRight{};
+
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovingToLeft);
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Death")
+	FOnMovingToLeft _OnMovingToLeft{};
 
 	// Falling
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Death")
@@ -98,5 +113,12 @@ private:
 	UFUNCTION()
 	void AdjustCollisionRadius();
 
-	
+	UFUNCTION()
+	void StoppedMoving();
+
+	void SetMovingToRight();
+	void SetMovingToLeft();
+
+	bool _IsMovingToRight{ false };
+	bool _IsMovingToLeft{ false };
 };
