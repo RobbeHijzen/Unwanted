@@ -3,6 +3,7 @@
 
 #include "PlayerBalloon.h"
 #include "Kismet/GameplayStatics.h"
+#include "PhysicsEngine/ConstraintInstance.h"
 
 APlayerBalloon::APlayerBalloon()
 {
@@ -34,11 +35,7 @@ void APlayerBalloon::Tick(float DeltaTime)
 
 	if (!_HasPopped)
 	{
-		AddActorWorldOffset(FVector{ 0.f, 0.f, 1.f } *_CurrentVerticalSpeed * DeltaTime, true);
-	}
-	else
-	{
-		//AddActorWorldOffset(FVector{ 0.f, 0.f, -1.f } *_FallingSpeed * DeltaTime, true);
+		AddActorWorldOffset(FVector{ 0.f, 0.f, 1.f } * _CurrentVerticalSpeed * DeltaTime, true);
 	}
 }
 
@@ -61,6 +58,8 @@ void APlayerBalloon::PopBalloon()
 	if (_HasPopped) return;
 	_HasPopped = true;
 	_OnPopped.Broadcast();
+
+	
 }
 
 void APlayerBalloon::Strafe(const FInputActionValue& value)

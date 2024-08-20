@@ -103,6 +103,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Death")
 	float _FallingSpeed{2000.f};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Bounds")
+	float _BoundsWidth{ 1700.f };
+
 private:	
 
 	void Strafe(const FInputActionValue& value);
